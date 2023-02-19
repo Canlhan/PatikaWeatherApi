@@ -22,7 +22,7 @@ public class WeatherServiceImpl implements WeatherService{
     @Override
     public WeatherInformation getDailyWeatherByCityName(String cityName) throws JsonProcessingException {
 
-        System.out.println("daily"+weatherApiCallService.getWeatherDailyByCityName(cityName));
+
 
         return null;
 

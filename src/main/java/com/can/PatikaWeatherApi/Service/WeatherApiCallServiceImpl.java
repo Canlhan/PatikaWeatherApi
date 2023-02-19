@@ -17,7 +17,7 @@ import java.util.Map;
 public class WeatherApiCallServiceImpl implements WeatherApiCallService{
 
 
-    private final String BASE_URL="https://api.openweathermap.org/data/2.5/weather";
+    private final String BASE_URL="https://api.openweathermap.org/data/2.5";
     private final String API_KEY="d2171110bcc261d78e7d3a04528fe62e";
 
 
@@ -39,7 +39,7 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
         String lat=latAndLon.get("lat");
         String lon=latAndLon.get("lon");
         ResponseEntity<String> response=
-                restTemplate.getForEntity(BASE_URL+"?lat="+lat+"&lon="+lon+"&units=metric&appid="+API_KEY, String.class);
+                restTemplate.getForEntity(BASE_URL+"/weather?lat="+lat+"&lon="+lon+"&units=metric&appid="+API_KEY, String.class);
         JsonNode  root = mapper.readTree(response.getBody());
 //        JsonNode country=root.path("location").path("country");
 
@@ -54,7 +54,14 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
     }
 
 
-
+    /**
+     * This method request to openweatherapi.org  for getting the weather of city
+     *
+     * @param cityName
+     * @return JsonObject
+     *
+     * @throws JsonProcessingException
+     */
     @Override
     public JSONObject getWeatherMonthlyByCityName(String cityName) throws JsonProcessingException {
         latAndLon=getLatAndLon(cityName);
@@ -77,7 +84,8 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
         String lat=latAndLon.get("lat");
         String lon=latAndLon.get("lon");
 
-        ResponseEntity<String> response=restTemplate.getForEntity(BASE_URL+"forecast.json?key="+API_KEY+"&q="+cityName+"&days=4", String.class);
+        String url=BASE_URL+"/forecast?lat="+lat+"&lon="+lon+"&cnt=7&units=metric&appid="+API_KEY;
+        ResponseEntity<String> response=restTemplate.getForEntity(url, String.class);
         JsonNode  root = mapper.readTree(response.getBody());
 
         jsonObject= (JSONObject) JSONValue.parse(root.toString());
@@ -88,6 +96,13 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
         return jsonObject;
     }
 
+    /**
+     *This method fetch latitude and longitude of cityName
+     *
+     * @param cityName
+     * @return the Map of latitute and longitude
+     * @throws JsonProcessingException
+     */
 
     public Map<String, String> getLatAndLon(String cityName) throws JsonProcessingException {
         String latAndLon="https://api.openweathermap.org/geo/1.0/direct?q="+cityName+"&limit=1&appid=d2171110bcc261d78e7d3a04528fe62e";
