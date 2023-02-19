@@ -35,7 +35,7 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
     @Override
     public JSONObject getWeatherDailyByCityName(String cityName) throws JsonProcessingException {
 
-        latAndLon=getLatAndLon(cityName);
+        latAndLon=getLatituteAndLongitude(cityName);
         String lat=latAndLon.get("lat");
         String lon=latAndLon.get("lon");
         ResponseEntity<String> response=
@@ -64,7 +64,7 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
      */
     @Override
     public JSONObject getWeatherMonthlyByCityName(String cityName) throws JsonProcessingException {
-        latAndLon=getLatAndLon(cityName);
+        latAndLon=getLatituteAndLongitude(cityName);
         String lat=latAndLon.get("lat");
         String lon=latAndLon.get("lon");
         ResponseEntity<String> response=
@@ -80,7 +80,7 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
 
     @Override
     public JSONObject getWeatherWeeklyByCityName(String cityName) throws JsonProcessingException {
-        latAndLon=getLatAndLon(cityName);
+        latAndLon=getLatituteAndLongitude(cityName);
         String lat=latAndLon.get("lat");
         String lon=latAndLon.get("lon");
 
@@ -104,7 +104,7 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
      * @throws JsonProcessingException
      */
 
-    public Map<String, String> getLatAndLon(String cityName) throws JsonProcessingException {
+    public Map<String, String> getLatituteAndLongitude(String cityName) throws JsonProcessingException {
         String latAndLon="https://api.openweathermap.org/geo/1.0/direct?q="+cityName+"&limit=1&appid=d2171110bcc261d78e7d3a04528fe62e";
         ResponseEntity<String> response=restTemplate.getForEntity(latAndLon,String.class);
         JsonNode  root = mapper.readTree(response.getBody());
