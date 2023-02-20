@@ -43,7 +43,7 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
         JsonNode  root = mapper.readTree(response.getBody());
 //        JsonNode country=root.path("location").path("country");
 
-        jsonObject= (JSONObject) JSONValue.parse(root.asText());
+        jsonObject= (JSONObject) JSONValue.parse(root.toString());
        ;
 //        Weather weather=getBaseWeatherInformation(root);
 //
@@ -68,10 +68,10 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
         String lat=latAndLon.get("lat");
         String lon=latAndLon.get("lon");
         ResponseEntity<String> response=
-                restTemplate.getForEntity("https://pro.openweathermap.org/data/2.5/forecast/climate?lat="+lat+"&lon="+lon+"&appid=b1b15e88fa797225412429c1c50c122a1", String.class);
+                restTemplate.getForEntity("https://pro.openweathermap.org/data/2.5/forecast/climate?lat="+lat+"&lon="+lon+"&units=metric&appid=b1b15e88fa797225412429c1c50c122a1", String.class);
         JsonNode  root = mapper.readTree(response.getBody());
 
-         jsonObject= (JSONObject) JSONValue.parse(root.asText());
+         jsonObject= (JSONObject) JSONValue.parse(root.toString());
 
 
 
@@ -84,7 +84,7 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
         String lat=latAndLon.get("lat");
         String lon=latAndLon.get("lon");
 
-        String url=BASE_URL+"/forecast?lat="+lat+"&lon="+lon+"&cnt=7&units=metric&appid="+API_KEY;
+        String url=BASE_URL+"/forecast?lat="+lat+"&lon="+lon+"&cnt=56&units=metric&appid="+API_KEY;
         ResponseEntity<String> response=restTemplate.getForEntity(url, String.class);
         JsonNode  root = mapper.readTree(response.getBody());
 
@@ -109,9 +109,9 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
         ResponseEntity<String> response=restTemplate.getForEntity(latAndLon,String.class);
         JsonNode  root = mapper.readTree(response.getBody());
 
-        String lat=root.path("lat").toString();
-        String lon=root.path("lon").toString();
-
+        String lat=root.get(0).path("lat").toString();
+        String lon=root.get(0).path("lon").asText();
+        System.out.println("lat: "+lat);
         Map<String,String> latAndLonMap=Map.of("lat",lat,
                                               "lon",lon );
 

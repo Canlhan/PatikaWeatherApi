@@ -3,10 +3,7 @@ package com.can.PatikaWeatherApi.Entity;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @ToString
@@ -14,11 +11,11 @@ import java.util.Set;
 public class Weather
 {
 
-    private Map<String,String> description;
+    private String description;
     private String temperature;
-    private LocalDate localDate;
+    private Date localDate;
 
-    public Weather(Map<String,String> description,String temperature,LocalDate localDate) {
+    public Weather(String description,String temperature,Date localDate) {
         this.description =description;
         this.temperature=temperature;
         this.localDate=localDate;

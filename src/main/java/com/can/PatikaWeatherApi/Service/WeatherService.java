@@ -11,5 +11,5 @@ public interface WeatherService
     WeatherInformation getDailyWeatherByCityName(String cityName) throws JsonProcessingException;
 
     WeatherInformation getMonthlWeatherByCityName(String cityName) throws  JsonProcessingException;
-    WeatherInformation getWeeklyWeatherByCityName(String citName) throws JsonProcessingException, ParseException;
+    WeatherInformation getWeeklyWeatherByCityName(String citName) throws JsonProcessingException;
 }

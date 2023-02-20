@@ -3,6 +3,7 @@ package com.can.PatikaWeatherApi.Controllers;
 import com.can.PatikaWeatherApi.Entity.WeatherInformation;
 import com.can.PatikaWeatherApi.Service.WeatherService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,7 @@ public class WeatherController
         this.weatherService = weatherApiCallService;
     }
 
-    //http://localhost:8086/api/v1/daily
+    //http://localhost:8086/api/v1/daily?cityName=izmir
     @GetMapping("/daily")
     public  ResponseEntity<WeatherInformation> getWeatherDaily(@RequestParam String cityName) {
 
@@ -32,12 +33,25 @@ public class WeatherController
         }
     }
 
+    //http://localhost:8086/api/v1/monthly?cityName=izmir
     @GetMapping("/monthly")
     public ResponseEntity<WeatherInformation> getWeatherMonthly(@RequestParam String cityName){
 
 
         try {
             return ResponseEntity.ok(weatherService.getMonthlWeatherByCityName(cityName));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    //http://localhost:8086/api/v1/weekly?cityName=izmir
+    @GetMapping("/weekly")
+
+    public ResponseEntity<WeatherInformation> getWeatherWeekly(@RequestParam  String cityName){
+
+
+        try {
+            return ResponseEntity.ok(weatherService.getWeeklyWeatherByCityName(cityName));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

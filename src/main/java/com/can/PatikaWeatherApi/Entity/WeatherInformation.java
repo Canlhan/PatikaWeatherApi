@@ -20,8 +20,8 @@ public class WeatherInformation
 
     private Weather daily;
 
-    private List<Weather> monthly;
+    private List<Weather> weekly;
 
-    private List<Weather> yearly;
+    private List<Weather> monthly;
 
 }
