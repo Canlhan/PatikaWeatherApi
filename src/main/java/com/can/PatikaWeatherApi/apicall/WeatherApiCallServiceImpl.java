@@ -104,7 +104,7 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
      * @throws JsonProcessingException
      */
 
-    public Map<String, String> getLatituteAndLongitude(String cityName) throws JsonProcessingException {
+    private Map<String, String> getLatituteAndLongitude(String cityName) throws JsonProcessingException {
         String latAndLon="https://api.openweathermap.org/geo/1.0/direct?q="+cityName+"&limit=1&appid=d2171110bcc261d78e7d3a04528fe62e";
         ResponseEntity<String> response=restTemplate.getForEntity(latAndLon,String.class);
         JsonNode  root = mapper.readTree(response.getBody());
