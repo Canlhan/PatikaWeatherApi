@@ -1,4 +1,4 @@
-package com.can.PatikaWeatherApi.Service;
+package com.can.PatikaWeatherApi.apicall;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.simple.JSONObject;

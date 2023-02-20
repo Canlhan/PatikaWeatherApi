@@ -1,4 +1,4 @@
-package com.can.PatikaWeatherApi.Service;
+package com.can.PatikaWeatherApi.apicall;
 
 import com.can.PatikaWeatherApi.Entity.Weather;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -118,22 +118,5 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
         return latAndLonMap;
     }
 
-    private Weather getBaseWeatherInformation(JsonNode root) throws JsonProcessingException {
 
-
-        JsonNode name = root.path("current");
-        String date=root.path("location").path("localtime").toString().substring(1).split(" ")[0];
-    LocalDate localDate=LocalDate.parse(date);
-        JsonNode temperature= name.path("temp_c");
-        JsonNode description=name.path("condition").path("text");
-        JsonNode windSpeed=name.path("wind_kph");
-        JsonNode pressure=name.path("pressure_mb");
-        Weather weather=Weather.builder().temperature(temperature.toString())
-                .description(Map.of("description",description.toString(),
-                        "windSpeed",windSpeed.toString(),
-                        "pressure",pressure.toString() )).localDate(localDate).build();
-        System.out.println(root);
-
-        return weather;
-    }
 }

@@ -1,11 +1,10 @@
 package com.can.PatikaWeatherApi.Service;
 
 import com.can.PatikaWeatherApi.Entity.WeatherInformation;
+import com.can.PatikaWeatherApi.apicall.WeatherApiCallService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
