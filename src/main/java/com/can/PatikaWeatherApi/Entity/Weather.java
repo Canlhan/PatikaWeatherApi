@@ -1,5 +1,6 @@
 package com.can.PatikaWeatherApi.Entity;
 
+import jakarta.annotation.Nonnull;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.util.*;
 public class Weather
 {
 
+    @Nonnull
     private String description;
     private String temperature;
     private Date localDate;

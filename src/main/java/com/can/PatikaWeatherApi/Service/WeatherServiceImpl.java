@@ -1,7 +1,9 @@
 package com.can.PatikaWeatherApi.Service;
 
+
 import com.can.PatikaWeatherApi.Entity.Weather;
 import com.can.PatikaWeatherApi.Entity.WeatherInformation;
+import com.can.PatikaWeatherApi.ParamError;
 import com.can.PatikaWeatherApi.apicall.WeatherApiCallService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.simple.JSONObject;
@@ -27,11 +29,15 @@ public class WeatherServiceImpl implements WeatherService{
         this.weatherApiCallService = weatherApiCallService;
     }
 
-    @Override
-    public WeatherInformation getDailyWeatherByCityName(String cityName) throws JsonProcessingException {
 
+    @Override
+    public WeatherInformation getDailyWeatherByCityName(String cityName) throws JsonProcessingException, ParamError {
+
+        if(cityName.equals("")){
+            throw  new ParamError("city name mustnt be empty");
+        }
         JSONObject jsonObject=weatherApiCallService.getWeatherDailyByCityName(cityName);
-        System.out.println(jsonObject);
+
         JSONObject  sys=(JSONObject)jsonObject.get("sys");
         String country=sys.get("country").toString();
         JSONObject main=(JSONObject)jsonObject.get("main");
@@ -55,6 +61,9 @@ public class WeatherServiceImpl implements WeatherService{
     @Override
     public WeatherInformation getMonthlWeatherByCityName(String cityName) throws JsonProcessingException {
 
+        if(cityName.equals("")){
+            throw  new ParamError("city name mustnt be empty");
+        }
         JSONObject jsonObject=weatherApiCallService.getWeatherMonthlyByCityName(cityName);
         JSONObject city=(JSONObject) jsonObject.get("city");
         String country=city.get("country").toString();
@@ -77,6 +86,9 @@ public class WeatherServiceImpl implements WeatherService{
     @Override
     public WeatherInformation getWeeklyWeatherByCityName(String citName) throws JsonProcessingException {
 
+        if(citName.equals("")){
+            throw  new ParamError("city name mustnt be empty");
+        }
 
 
 
@@ -108,6 +120,7 @@ public class WeatherServiceImpl implements WeatherService{
      * @return List of Weather
      */
     private List<Weather> convertWeeklyListOfJsonObjectToListOfWeather(List<JSONObject> days){
+
         List<Weather> weathersOfWeek=new ArrayList<>();
 
         for (int i=0;i<days.size();i+=8){
