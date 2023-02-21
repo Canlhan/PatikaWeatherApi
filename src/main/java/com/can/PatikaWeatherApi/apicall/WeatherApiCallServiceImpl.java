@@ -1,16 +1,16 @@
 package com.can.PatikaWeatherApi.apicall;
 
-import com.can.PatikaWeatherApi.Entity.Weather;
+import com.can.PatikaWeatherApi.ParamError;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDate;
 import java.util.Map;
 
 @Service
@@ -20,22 +20,30 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
     private final String BASE_URL="https://api.openweathermap.org/data/2.5";
     private final String API_KEY="d2171110bcc261d78e7d3a04528fe62e";
 
+    private final GeoApiCallService geoApiCallService;
+    @Autowired
+    private  ObjectMapper mapper;
 
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final RestTemplate restTemplate=new RestTemplate();
+    private final  RestTemplate restTemplate;
      private JSONObject jsonObject;
 
      private Map<String,String> latAndLon;
 
 
-    public WeatherApiCallServiceImpl() throws JsonProcessingException {
+    public WeatherApiCallServiceImpl(GeoApiCallService geoApiCallService, RestTemplate restTemplate) throws JsonProcessingException {
 
+        this.geoApiCallService = geoApiCallService;
+        this.restTemplate = restTemplate;
     }
 
-    @Override
-    public JSONObject getWeatherDailyByCityName(String cityName) throws JsonProcessingException {
 
-        latAndLon=getLatituteAndLongitude(cityName);
+    @Override
+    public JSONObject getWeatherDailyByCityName(String cityName) throws JsonProcessingException,ParamError {
+        if(cityName.equals("")){
+            throw  new ParamError("city name mustnt be empty");
+        }
+
+        latAndLon=geoApiCallService.getCoordinates(cityName,restTemplate,mapper);
         String lat=latAndLon.get("lat");
         String lon=latAndLon.get("lon");
         ResponseEntity<String> response=
@@ -45,6 +53,7 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
 
         jsonObject= (JSONObject) JSONValue.parse(root.toString());
        ;
+
 //        Weather weather=getBaseWeatherInformation(root);
 //
 //        WeatherInformation  weatherInformation=WeatherInformation.builder().daily(weather)
@@ -63,8 +72,11 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
      * @throws JsonProcessingException
      */
     @Override
-    public JSONObject getWeatherMonthlyByCityName(String cityName) throws JsonProcessingException {
-        latAndLon=getLatituteAndLongitude(cityName);
+    public JSONObject getWeatherMonthlyByCityName(String cityName) throws JsonProcessingException,ParamError {
+        if(cityName.equals("")){
+            throw  new ParamError("city name mustnt be empty");
+        }
+        latAndLon=geoApiCallService.getCoordinates(cityName,restTemplate,mapper);
         String lat=latAndLon.get("lat");
         String lon=latAndLon.get("lon");
         ResponseEntity<String> response=
@@ -79,8 +91,11 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
     }
 
     @Override
-    public JSONObject getWeatherWeeklyByCityName(String cityName) throws JsonProcessingException {
-        latAndLon=getLatituteAndLongitude(cityName);
+    public JSONObject getWeatherWeeklyByCityName(String cityName) throws JsonProcessingException,ParamError {
+        if(cityName.equals("")){
+            throw  new ParamError("city name mustnt be empty");
+        }
+        latAndLon=geoApiCallService.getCoordinates(cityName,restTemplate,mapper);
         String lat=latAndLon.get("lat");
         String lon=latAndLon.get("lon");
 
@@ -96,27 +111,25 @@ public class WeatherApiCallServiceImpl implements WeatherApiCallService{
         return jsonObject;
     }
 
-    /**
-     *This method fetch latitude and longitude of cityName
-     *
-     * @param cityName
-     * @return the Map of latitute and longitude
-     * @throws JsonProcessingException
-     */
 
-    private Map<String, String> getLatituteAndLongitude(String cityName) throws JsonProcessingException {
-        String latAndLon="https://api.openweathermap.org/geo/1.0/direct?q="+cityName+"&limit=1&appid=d2171110bcc261d78e7d3a04528fe62e";
-        ResponseEntity<String> response=restTemplate.getForEntity(latAndLon,String.class);
-        JsonNode  root = mapper.readTree(response.getBody());
 
-        String lat=root.get(0).path("lat").toString();
-        String lon=root.get(0).path("lon").asText();
-        System.out.println("lat: "+lat);
-        Map<String,String> latAndLonMap=Map.of("lat",lat,
-                                              "lon",lon );
 
-        return latAndLonMap;
-    }
+//    private Map<String, String> getLatituteAndLongitude(String cityName) throws JsonProcessingException {
+//        if(cityName.equals("")){
+//            throw  new ParamError("city name mustnt be empty");
+//        }
+//        String latAndLon="https://api.openweathermap.org/geo/1.0/direct?q="+cityName+"&limit=1&appid=d2171110bcc261d78e7d3a04528fe62e";
+//        ResponseEntity<String> response=restTemplate.getForEntity(latAndLon,String.class);
+//        JsonNode  root = mapper.readTree(response.getBody());
+//
+//        String lat=root.get(0).path("lat").toString();
+//        String lon=root.get(0).path("lon").asText();
+//        System.out.println("lat: "+lat);
+//        Map<String,String> latAndLonMap=Map.of("lat",lat,
+//                                              "lon",lon );
+//
+//        return latAndLonMap;
+//    }
 
 
 }
